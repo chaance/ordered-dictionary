@@ -1,10 +1,12 @@
 {
 	"name": "ordered-dictionary",
-	"version": "1.0.0",
-	"description": "...",
-	"main": "dist/index.js",
-	"module": "dist/index.mjs",
-	"types": "dist/index.d.ts",
+	"version": "0.0.0",
+	"description": "A class for creating ordered dictionary data structures in JavaScript",
+	"main": "dist/ordered-dictionary.js",
+	"module": "dist/ordered-dictionary.js",
+	"types": "dist/ordered-dictionary.d.ts",
+	"type": "module",
+	"sideEffects": false,
 	"scripts": {
 		"build": "tsup",
 		"test": "vitest",

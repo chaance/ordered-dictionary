@@ -2,7 +2,6 @@
 // calls `set` which needs to read the instanciation state, so it can't be a
 // private member.
 const __instanciated = new WeakMap<OrderedDict<any, any>, boolean>();
-
 export class OrderedDict<K, V> extends Map<K, V> {
 	#keys: K[];
 

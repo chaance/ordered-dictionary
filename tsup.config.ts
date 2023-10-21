@@ -16,16 +16,6 @@ export default defineConfig(() => {
 	});
 
 	return [
-		// cjs.dev.js
-		{
-			entry,
-			format: "cjs",
-			sourcemap: true,
-			external,
-			banner: { js: banner },
-			target,
-		},
-
 		// esm + d.ts
 		{
 			entry,

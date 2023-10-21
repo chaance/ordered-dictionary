@@ -1,4 +1,4 @@
-import { describe, expect, it, test, beforeEach } from "vitest";
+import { describe, expect, test } from "vitest";
 import { OrderedDict } from "./ordered-dictionary";
 
 describe("OrderedDict", () => {
