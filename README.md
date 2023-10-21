@@ -43,25 +43,15 @@ dictionary.deleteAt(-1);
 assert(dictionary.at(-1) === 4);
 ```
 
-- [ESLint](https://eslint.org/)
-- [Prettier](https://prettier.io/)
-- [tsup](https://tsup.egoist.dev/)
-- [Vitest](https://vitest.dev/)
+Full documentation coming soon.
 
-## Getting Started
+## Prior art
 
-Author your package in `src/`. By default, the entrypoint is `src/index.ts`. Multiple entrypoints can be configured in `tsup.config.ts`.
-
-Build your package with `npm run build`. This will output the compiled package to `dist/` and ... you're done! Your package is ready to publish. Kick back and enjoy your new OSS package.
-
-## Bundling
-
-Vite is installed because it is a peer dependency of Vitest. I still use `tsup` for bundling by default, as it has a simpler interface. While Vite is a great bundler, it is only really useful for browser packages where you might want a testing page for development.
-
-Vite and tsup are both powered by esbuild and Rollup under the hood, so a) the added dependency overhead is minimal, and b) switching should be relatively simple and result in similar output if you want Vite's features.
-
-In the future I may turn this project into a CLI script that allows you to choose Vite for browser packages.
+- [`OrderedDictionary` in C#](https://learn.microsoft.com/en-us/dotnet/api/system.collections.specialized.ordereddictionary?view=net-7.0)
+- [`OrderedDictionary` in Swift](https://github.com/apple/swift-collections/blob/main/Documentation/OrderedDictionary.md)
+- [`ordered-dict` by Forbes Lindesay](https://github.com/ForbesLindesay/ordered-dict/tree/master)
 
 ## Contributing
 
-PRs welcome!
+PRs welcome! Any help on algorithmic optimization would be greatly appreciated,
+as this is not at all my area of expertise.
