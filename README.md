@@ -1,5 +1,8 @@
 <h1 align="center"><code>ordered-dictionary</code></h1>
 
+> NOTE: This is very much a WIP. Some heuristics I'm still not 100% sure of, and
+> there certainly optimizations to be made. Contributions welcome!
+
 A class for creating ordered dictionary data structures in JavaScript.
 
 An ordered dictionary is essentially a `Map`: a collection of key-value pairs
