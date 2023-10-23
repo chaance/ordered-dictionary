@@ -25,42 +25,56 @@ export class OrderedDict<K, V> extends Map<K, V> {
 	}
 
 	insert(index: number, key: K, value: V) {
-		if (this.has(key)) {
-			this.delete(key);
-		}
-		let safeIndex = toSafeIndex(this.#keys, index);
-		if (safeIndex === -1) {
-			// Unsure
+		const has = this.has(key);
+		const length = this.#keys.length;
+		let relativeIndex = toSafeInteger(index);
+		let actualIndex =
+			relativeIndex >= 0 ? relativeIndex : length + relativeIndex;
+		let safeIndex = actualIndex < 0 || actualIndex >= length ? -1 : actualIndex;
+
+		if (
+			safeIndex === this.size ||
+			(has && safeIndex === this.size - 1) ||
+			safeIndex === -1
+		) {
 			this.set(key, value);
 			return this;
 		}
+
+		const size = this.size + (has ? 0 : 1);
 
 		// If you insert at, say, -2, without this bit you'd replace the
 		// second-to-last item and push the rest up one, which means the new item is
 		// 3rd to last. This isn't very intuitive; inserting at -2 is more like
 		// saying "make this item the second to last".
-		if (index < 0) {
-			safeIndex++;
+		if (relativeIndex < 0) {
+			actualIndex++;
 		}
 
-		if (safeIndex === this.size) {
-			this.set(key, value);
-			return this;
-		}
-
-		// May not be the most efficient way to do this, but we want to ensure that
-		// a new reference is not created. Clear + re-set all keys makes sense to
-		// me, but this is not going to be great for large datasets, and we should
-		// be able to just skip items earlier in the object. If you are an algorithm
-		// whiz and you're reading this in disgust, PRs are very welcome.
-		const entries = [...this.entries()];
-		this.clear();
-		for (let i = 0; i < entries.length + 1; i++) {
-			if (safeIndex === i) {
+		const keys = [...this.#keys];
+		let nextValue: V | undefined;
+		let shouldSkip = false;
+		for (let i = actualIndex; i < size; i++) {
+			if (actualIndex === i) {
+				let nextKey = keys[i];
+				if (keys[i] === key) {
+					nextKey = keys[i + 1];
+				}
+				if (has) {
+					// delete first to ensure that the item is moved to the end
+					this.delete(key);
+				}
+				nextValue = this.get(nextKey);
 				this.set(key, value);
 			} else {
-				const j = i > safeIndex ? i - 1 : i;
-				this.set(entries[j]![0], entries[j]![1]);
+				if (!shouldSkip && keys[i - 1] === key) {
+					shouldSkip = true;
+				}
+				const currentKey = keys[shouldSkip ? i : i - 1];
+				const currentValue = nextValue!;
+				nextValue = this.get(currentKey);
+				this.delete(currentKey);
+				this.set(currentKey, currentValue);
 			}
 		}
 		return this;

@@ -80,7 +80,50 @@ describe("OrderedDict", () => {
 		expect(dict.at(3)).toBe(4);
 	});
 
+	test("insert(): existing key at 0 index", () => {
+		let dict = new OrderedDict([
+			["a", 0],
+			["b", 2],
+			["c", 3],
+			["e", 5],
+		]);
+		dict.insert(0, "a", 1);
+		expect(dict.keyAt(0)).toBe("a");
+		expect(dict.at(0)).toBe(1);
+		expect(dict.keyAt(1)).toBe("b");
+		expect(dict.at(1)).toBe(2);
+		expect(dict.size).toBe(4);
+	});
+
+	test("insert(): new key at 0 index", () => {
+		let dict = new OrderedDict([
+			["b", 2],
+			["c", 3],
+			["e", 5],
+		]);
+		dict.insert(0, "a", 1);
+		expect(dict.keyAt(0)).toBe("a");
+		expect(dict.at(0)).toBe(1);
+		expect(dict.keyAt(1)).toBe("b");
+		expect(dict.at(1)).toBe(2);
+		expect(dict.size).toBe(4);
+	});
+
 	test("insert(): existing key at relative negative index", () => {
+		let dict = new OrderedDict([
+			["a", 1],
+			["b", 2],
+			["c", 3],
+			["e", 5],
+			["f", 4],
+		]);
+		dict.insert(-1, "f", 6);
+		expect(dict.keyAt(-1)).toBe("f");
+		expect(dict.at(-1)).toBe(6);
+		expect(dict.size).toBe(5);
+	});
+
+	test("insert(): new key at relative negative index", () => {
 		let dict = new OrderedDict([
 			["a", 1],
 			["b", 2],
@@ -89,6 +132,7 @@ describe("OrderedDict", () => {
 		]);
 		dict.insert(-1, "f", 6);
 		expect(dict.keyAt(-1)).toBe("f");
+		expect(dict.at(0)).toBe(1);
 		expect(dict.at(-1)).toBe(6);
 
 		dict.insert(-3, "d", 4);
@@ -96,7 +140,7 @@ describe("OrderedDict", () => {
 		expect(dict.at(3)).toBe(4);
 	});
 
-	test("insert(): new key at a new index", () => {
+	test("insert(): existing key at a new index", () => {
 		let dict = new OrderedDict([
 			["a", 1],
 			["b", 2],
@@ -137,78 +181,6 @@ describe("OrderedDict", () => {
 		dict.with(0, "b", 1);
 		expect(dict.get("b")).toBe(2);
 		expect(dict.keyAt(1)).toBe("b");
-	});
-
-	test("with(): existing key at its current index", () => {
-		let dict = new OrderedDict([
-			["a", 1],
-			["b", 2],
-			["c", 3],
-		]);
-		const next = dict.with(1, "b", 4);
-		expect(next.get("b")).toBe(4);
-	});
-
-	test("with(): existing key at a new index", () => {
-		let dict = new OrderedDict([
-			["a", 1],
-			["b", 2],
-			["c", 3],
-		]);
-
-		const next = dict.with(0, "b", 1);
-		// sets the correct value
-		expect(next.get("b")).toBe(1);
-
-		// moves to the inserted index
-		expect(next.at(0)).toBe(1);
-		expect(next.keyAt(0)).toBe("b");
-
-		// previous item at the inserted index is moved up by one
-		expect(next.keyAt(1)).toBe("a");
-		expect(next.get("a")).toBe(1);
-	});
-
-	test("with(): existing key at an index larger than object size", () => {
-		const dict = new OrderedDict([
-			["a", 1],
-			["b", 2],
-			["c", 3],
-		]);
-
-		const next = dict.with(20, "d", 4);
-		expect(next.keyAt(3)).toBe("d");
-		expect(next.at(3)).toBe(4);
-	});
-
-	test("with(): existing key at relative negative index", () => {
-		const dict = new OrderedDict([
-			["a", 1],
-			["b", 2],
-			["c", 3],
-			["e", 5],
-		]);
-
-		let next = dict.with(-1, "f", 6);
-		expect(next.keyAt(-1)).toBe("f");
-		expect(next.at(-1)).toBe(6);
-
-		next = next.with(-3, "d", 4);
-		expect(next.keyAt(3)).toBe("d");
-		expect(next.at(3)).toBe(4);
-	});
-
-	test("with(): new key at a new index", () => {
-		const dict = new OrderedDict([
-			["a", 1],
-			["b", 2],
-			["c", 3],
-		]);
-
-		const next = dict.with(0, "b", 1);
-		expect(next.get("b")).toBe(1);
-		expect(next.at(0)).toBe(1);
-		expect(next.keyAt(0)).toBe("b");
 	});
 
 	test("first()", () => {
