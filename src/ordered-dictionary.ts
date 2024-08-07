@@ -1,3 +1,5 @@
+import { at, toSafeInteger } from "./internal.ts";
+
 // Not a real member because it shouldn't be accessible, but the super class
 // calls `set` which needs to read the instanciation state, so it can't be a
 // private member.
@@ -240,7 +242,7 @@ export class OrderedDict<K, V> extends Map<K, V> {
 	map<U>(
 		callbackfn: (entry: [K, V], index: number, dict: OrderedDict<K, V>) => U,
 		thisArg?: any,
-	) {
+	): OrderedDict<K, U> {
 		const entries: [K, U][] = [];
 		let index = 0;
 		for (const entry of this) {
@@ -372,8 +374,13 @@ export class OrderedDict<K, V> extends Map<K, V> {
 	}
 
 	toReversed(): OrderedDict<K, V> {
-		const entries = [...this.entries()].reverse();
-		return new OrderedDict(entries);
+		const reversed = new OrderedDict<K, V>();
+		for (let index = this.size - 1; index >= 0; index--) {
+			const key = this.keyAt(index)!;
+			const element = this.get(key)!;
+			reversed.set(key, element);
+		}
+		return reversed;
 	}
 
 	toSpliced(start: number, deleteCount?: number): OrderedDict<K, V>;
@@ -412,61 +419,4 @@ export class OrderedDict<K, V> extends Map<K, V> {
 		}
 		return result;
 	}
-
-	every(
-		predicate: (
-			entry: [K, V],
-			index: number,
-			dict: OrderedDict<K, V>,
-		) => unknown,
-		thisArg?: any,
-	) {
-		let index = 0;
-		for (const entry of this) {
-			if (!Reflect.apply(predicate, thisArg, [entry, index, this])) {
-				return false;
-			}
-			index++;
-		}
-		return true;
-	}
-
-	some(
-		predicate: (
-			entry: [K, V],
-			index: number,
-			dict: OrderedDict<K, V>,
-		) => unknown,
-		thisArg?: any,
-	) {
-		let index = 0;
-		for (const entry of this) {
-			if (Reflect.apply(predicate, thisArg, [entry, index, this])) {
-				return true;
-			}
-			index++;
-		}
-		return false;
-	}
-}
-
-function at<T>(array: ArrayLike<T>, index: number): T | undefined {
-	if ("at" in Array.prototype) {
-		return Array.prototype.at.call(array, index);
-	}
-	const actualIndex = toSafeIndex(array, index);
-	return actualIndex === -1 ? undefined : array[actualIndex];
-}
-
-function toSafeIndex(array: ArrayLike<any>, index: number) {
-	const length = array.length;
-	const relativeIndex = toSafeInteger(index);
-	const actualIndex =
-		relativeIndex >= 0 ? relativeIndex : length + relativeIndex;
-	return actualIndex < 0 || actualIndex >= length ? -1 : actualIndex;
-}
-
-function toSafeInteger(number: number) {
-	// eslint-disable-next-line no-self-compare
-	return number !== number || number === 0 ? 0 : Math.trunc(number);
 }
