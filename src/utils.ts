@@ -1,8 +1,14 @@
 import { type OrderedDict } from "./ordered-dictionary.ts";
 
-export function every<K, V, D extends OrderedDict<K, V> = OrderedDict<K, V>>(
+export type KeyOf<D extends OrderedDict<any, any>> =
+	D extends OrderedDict<infer K, any> ? K : never;
+
+export type ValueOf<D extends OrderedDict<any, any>> =
+	D extends OrderedDict<any, infer V> ? V : never;
+
+export function every<D extends OrderedDict<any, any>>(
 	dictionary: D,
-	predicate: (entry: [K, V], index: number, dict: D) => unknown,
+	predicate: (entry: [KeyOf<D>, ValueOf<D>], index: number, dict: D) => unknown,
 	thisArg?: any,
 ) {
 	let index = 0;
@@ -15,9 +21,9 @@ export function every<K, V, D extends OrderedDict<K, V> = OrderedDict<K, V>>(
 	return true;
 }
 
-export function some<K, V, D extends OrderedDict<K, V> = OrderedDict<K, V>>(
+export function some<D extends OrderedDict<any, any>>(
 	dictionary: D,
-	predicate: (entry: [K, V], index: number, dict: D) => unknown,
+	predicate: (entry: [KeyOf<D>, ValueOf<D>], index: number, dict: D) => unknown,
 	thisArg?: any,
 ) {
 	let index = 0;
