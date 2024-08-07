@@ -2,15 +2,14 @@
 	"name": "ordered-dictionary",
 	"version": "0.0.0",
 	"description": "A class for creating ordered dictionary data structures in JavaScript",
-	"main": "dist/ordered-dictionary.js",
-	"module": "dist/ordered-dictionary.js",
-	"types": "dist/ordered-dictionary.d.ts",
+	"main": "ordered-dictionary.js",
+	"module": "ordered-dictionary.js",
+	"types": "ordered-dictionary.d.ts",
 	"type": "module",
 	"sideEffects": false,
 	"scripts": {
 		"build": "tsup",
 		"test": "vitest",
-		"coverage": "vitest run --coverage",
 		"lint": "eslint .",
 		"format": "prettier --write ."
 	},
@@ -27,19 +26,18 @@
 		"LICENSE"
 	],
 	"devDependencies": {
-		"@types/node": "^20.8.7",
-		"@typescript-eslint/eslint-plugin": "^6.8.0",
-		"@typescript-eslint/parser": "^6.8.0",
-		"@vitest/coverage-v8": "^0.34.6",
-		"eslint": "^8.52.0",
-		"eslint-config-chance": "^4.0.0",
+		"@types/node": "^20.14.14",
+		"@typescript-eslint/eslint-plugin": "^6.21.0",
+		"@typescript-eslint/parser": "^6.21.0",
+		"eslint": "^8.57.0",
+		"eslint-config-chance": "^4.0.1",
 		"eslint-import-resolver-node": "^0.3.9",
 		"eslint-import-resolver-typescript": "^3.6.1",
-		"eslint-plugin-import": "^2.28.1",
-		"prettier": "^3.0.3",
-		"tsup": "^7.2.0",
-		"typescript": "^5.2.2",
-		"vite": "^4.5.0",
-		"vitest": "^0.34.6"
+		"eslint-plugin-import": "^2.29.1",
+		"prettier": "^3.3.3",
+		"tsup": "^8.2.4",
+		"typescript": "^5.5.4",
+		"vite": "^5.4.0",
+		"vitest": "^2.0.5"
 	}
 }

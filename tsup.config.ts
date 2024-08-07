@@ -4,9 +4,8 @@ import pkgJson from "./package.json";
 let { name: packageName, version: packageVersion } = pkgJson;
 
 export default defineConfig(() => {
-	const entry = ["src/ordered-dictionary.ts"];
-	const external = ["react", "react-dom"];
-	const target = "es2020";
+	const entry = ["src/index.ts", "src/utils.ts"];
+	const target = "es2022";
 	const banner = createBanner({
 		author: "Chance Strickland",
 		creationYear: 2023,
@@ -21,10 +20,10 @@ export default defineConfig(() => {
 			entry,
 			format: "esm",
 			sourcemap: true,
-			external,
 			banner: { js: banner },
 			target,
 			dts: { banner },
+			outDir: ".",
 		},
 	];
 });
