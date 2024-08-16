@@ -312,4 +312,116 @@ describe("OrderedDict", () => {
 		expect(status).toBe(false);
 		expect(dict.size).toBe(4);
 	});
+
+	describe("find", () => {
+		const dict = new OrderedDict([
+			["a", 1],
+			["b", 2],
+			["c", 3],
+		]);
+		test("key: found", () => {
+			const result = dict.find(([key]) => key === "b");
+			expect(result).toEqual(["b", 2]);
+		});
+		test("key: not found", () => {
+			const result = dict.find(([key]) => key === "d");
+			expect(result).toBeUndefined();
+		});
+		test("value: found", () => {
+			const result = dict.find(([, value]) => value === 3);
+			expect(result).toEqual(["c", 3]);
+		});
+		test("value: not found", () => {
+			const result = dict.find(([, value]) => value === 4);
+			expect(result).toBeUndefined();
+		});
+		test("thisArg", () => {
+			const result = dict.find(function (this: number, [, value]) {
+				return value === this;
+			}, 1);
+			expect(result).toEqual(["a", 1]);
+		});
+		test("no thisArg", () => {
+			const result = dict.find(function (this: unknown, _, dictionary) {
+				return dictionary === this;
+			});
+			expect(result).toBeUndefined();
+		});
+	});
+
+	describe("findIndex", () => {
+		const dict = new OrderedDict([
+			["a", 1],
+			["b", 2],
+			["c", 3],
+		]);
+		test("key: found", () => {
+			const result = dict.findIndex(([key]) => key === "b");
+			expect(result).toBe(1);
+		});
+		test("key: not found", () => {
+			const result = dict.findIndex(([key]) => key === "d");
+			expect(result).toBe(-1);
+		});
+		test("value: found", () => {
+			const result = dict.findIndex(([, value]) => value === 3);
+			expect(result).toBe(2);
+		});
+		test("value: not found", () => {
+			const result = dict.findIndex(([, value]) => value === 4);
+			expect(result).toBe(-1);
+		});
+
+		test("with thisArg", () => {
+			const thisArg = { key: "b" };
+			const result = dict.findIndex(function (this: typeof thisArg, [key]) {
+				return key === this.key;
+			}, thisArg);
+			expect(result).toBe(1);
+		});
+
+		test("no thisArg", () => {
+			expect(() => {
+				dict.findIndex(function (this: unknown, [, value]) {
+					return value === (this as any).get("b");
+				});
+			}).toThrow();
+		});
+	});
+
+	describe("filter", () => {
+		test("makes a copy of the dictionary", () => {
+			const dict = new OrderedDict([
+				["a", 1],
+				["b", 2],
+				["c", 3],
+			]);
+			const result = dict.filter(() => true);
+			expect(result).not.toBe(dict);
+		});
+
+		test("misc", () => {
+			const dict = new OrderedDict([
+				["a", 1],
+				["b", 2],
+				["c", 3],
+			]);
+			const result = dict.filter(([key, value]) => key === "b" || value === 3);
+			expect(result).toEqual(
+				new OrderedDict([
+					["b", 2],
+					["c", 3],
+				]),
+			);
+
+			const result2 = dict.filter(([key]) => key === "d");
+			expect(result2).toEqual(new OrderedDict());
+
+			const result3 = dict.filter(([, value]) => value === 3);
+			expect(result3).toEqual(new OrderedDict([["c", 3]]));
+
+			const result4 = dict.filter(([, value]) => value === 4);
+			expect(result4).toEqual(new OrderedDict());
+		});
+	});
 });

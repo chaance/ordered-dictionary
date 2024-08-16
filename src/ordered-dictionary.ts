@@ -170,7 +170,7 @@ export class OrderedDict<K, V> extends Map<K, V> {
 		predicate: (
 			entry: [K, V],
 			index: number,
-			dict: OrderedDict<K, V>,
+			dictionary: OrderedDict<K, V>,
 		) => boolean,
 		thisArg?: any,
 	) {
@@ -188,7 +188,7 @@ export class OrderedDict<K, V> extends Map<K, V> {
 		predicate: (
 			entry: [K, V],
 			index: number,
-			dict: OrderedDict<K, V>,
+			dictionary: OrderedDict<K, V>,
 		) => boolean,
 		thisArg?: any,
 	) {
@@ -215,7 +215,7 @@ export class OrderedDict<K, V> extends Map<K, V> {
 		predicate: (
 			entry: [K, V],
 			index: number,
-			dict: OrderedDict<K, V>,
+			dictionary: OrderedDict<K, V>,
 		) => unknown,
 		thisArg?: any,
 	): OrderedDict<K, V>;
@@ -224,7 +224,7 @@ export class OrderedDict<K, V> extends Map<K, V> {
 		predicate: (
 			entry: [K, V],
 			index: number,
-			dict: OrderedDict<K, V>,
+			dictionary: OrderedDict<K, V>,
 		) => unknown,
 		thisArg?: any,
 	) {
@@ -240,7 +240,11 @@ export class OrderedDict<K, V> extends Map<K, V> {
 	}
 
 	map<U>(
-		callbackfn: (entry: [K, V], index: number, dict: OrderedDict<K, V>) => U,
+		callbackfn: (
+			entry: [K, V],
+			index: number,
+			dictionary: OrderedDict<K, V>,
+		) => U,
 		thisArg?: any,
 	): OrderedDict<K, U> {
 		const entries: [K, U][] = [];
@@ -260,7 +264,7 @@ export class OrderedDict<K, V> extends Map<K, V> {
 			previousValue: [K, V],
 			currentEntry: [K, V],
 			currentIndex: number,
-			dict: OrderedDict<K, V>,
+			dictionary: OrderedDict<K, V>,
 		) => [K, V],
 	): [K, V];
 	reduce(
@@ -268,7 +272,7 @@ export class OrderedDict<K, V> extends Map<K, V> {
 			previousValue: [K, V],
 			currentEntry: [K, V],
 			currentIndex: number,
-			dict: OrderedDict<K, V>,
+			dictionary: OrderedDict<K, V>,
 		) => [K, V],
 		initialValue: [K, V],
 	): [K, V];
@@ -277,7 +281,7 @@ export class OrderedDict<K, V> extends Map<K, V> {
 			previousValue: U,
 			currentEntry: [K, V],
 			currentIndex: number,
-			dict: OrderedDict<K, V>,
+			dictionary: OrderedDict<K, V>,
 		) => U,
 		initialValue: U,
 	): U;
@@ -288,7 +292,7 @@ export class OrderedDict<K, V> extends Map<K, V> {
 				previousValue: U,
 				currentEntry: [K, V],
 				currentIndex: number,
-				dict: OrderedDict<K, V>,
+				dictionary: OrderedDict<K, V>,
 			) => U,
 			U?,
 		]
@@ -317,7 +321,7 @@ export class OrderedDict<K, V> extends Map<K, V> {
 			previousValue: [K, V],
 			currentEntry: [K, V],
 			currentIndex: number,
-			dict: OrderedDict<K, V>,
+			dictionary: OrderedDict<K, V>,
 		) => [K, V],
 	): [K, V];
 	reduceRight(
@@ -325,7 +329,7 @@ export class OrderedDict<K, V> extends Map<K, V> {
 			previousValue: [K, V],
 			currentEntry: [K, V],
 			currentIndex: number,
-			dict: OrderedDict<K, V>,
+			dictionary: OrderedDict<K, V>,
 		) => [K, V],
 		initialValue: [K, V],
 	): [K, V];
@@ -334,7 +338,7 @@ export class OrderedDict<K, V> extends Map<K, V> {
 			previousValue: [K, V],
 			currentValue: U,
 			currentIndex: number,
-			dict: OrderedDict<K, V>,
+			dictionary: OrderedDict<K, V>,
 		) => U,
 		initialValue: U,
 	): U;
@@ -345,7 +349,7 @@ export class OrderedDict<K, V> extends Map<K, V> {
 				previousValue: U,
 				currentEntry: [K, V],
 				currentIndex: number,
-				dict: OrderedDict<K, V>,
+				dictionary: OrderedDict<K, V>,
 			) => U,
 			U?,
 		]
@@ -420,3 +424,11 @@ export class OrderedDict<K, V> extends Map<K, V> {
 		return result;
 	}
 }
+
+export type KeyOf<D extends OrderedDict<any, any>> =
+	D extends OrderedDict<infer K, any> ? K : never;
+export type ValueOf<D extends OrderedDict<any, any>> =
+	D extends OrderedDict<any, infer V> ? V : never;
+export type EntryOf<D extends OrderedDict<any, any>> = [KeyOf<D>, ValueOf<D>];
+export type KeyFrom<E extends EntryOf<any>> = E[0];
+export type ValueFrom<E extends EntryOf<any>> = E[1];
