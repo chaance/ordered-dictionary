@@ -423,6 +423,42 @@ export class OrderedDict<K, V> extends Map<K, V> {
 		}
 		return result;
 	}
+
+	every(
+		predicate: (
+			entry: [K, V],
+			index: number,
+			dictionary: OrderedDict<K, V>,
+		) => unknown,
+		thisArg?: any,
+	) {
+		let index = 0;
+		for (const entry of this) {
+			if (!Reflect.apply(predicate, thisArg, [entry, index, this])) {
+				return false;
+			}
+			index++;
+		}
+		return true;
+	}
+
+	some(
+		predicate: (
+			entry: [K, V],
+			index: number,
+			dictionary: OrderedDict<K, V>,
+		) => unknown,
+		thisArg?: any,
+	) {
+		let index = 0;
+		for (const entry of this) {
+			if (Reflect.apply(predicate, thisArg, [entry, index, this])) {
+				return true;
+			}
+			index++;
+		}
+		return false;
+	}
 }
 
 export type KeyOf<D extends OrderedDict<any, any>> =

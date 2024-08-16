@@ -323,24 +323,29 @@ describe("OrderedDict", () => {
 			const result = dict.find(([key]) => key === "b");
 			expect(result).toEqual(["b", 2]);
 		});
+
 		test("key: not found", () => {
 			const result = dict.find(([key]) => key === "d");
 			expect(result).toBeUndefined();
 		});
+
 		test("value: found", () => {
 			const result = dict.find(([, value]) => value === 3);
 			expect(result).toEqual(["c", 3]);
 		});
+
 		test("value: not found", () => {
 			const result = dict.find(([, value]) => value === 4);
 			expect(result).toBeUndefined();
 		});
+
 		test("thisArg", () => {
 			const result = dict.find(function (this: number, [, value]) {
 				return value === this;
 			}, 1);
 			expect(result).toEqual(["a", 1]);
 		});
+
 		test("no thisArg", () => {
 			const result = dict.find(function (this: unknown, _, dictionary) {
 				return dictionary === this;
@@ -359,14 +364,17 @@ describe("OrderedDict", () => {
 			const result = dict.findIndex(([key]) => key === "b");
 			expect(result).toBe(1);
 		});
+
 		test("key: not found", () => {
 			const result = dict.findIndex(([key]) => key === "d");
 			expect(result).toBe(-1);
 		});
+
 		test("value: found", () => {
 			const result = dict.findIndex(([, value]) => value === 3);
 			expect(result).toBe(2);
 		});
+
 		test("value: not found", () => {
 			const result = dict.findIndex(([, value]) => value === 4);
 			expect(result).toBe(-1);
@@ -422,6 +430,92 @@ describe("OrderedDict", () => {
 
 			const result4 = dict.filter(([, value]) => value === 4);
 			expect(result4).toEqual(new OrderedDict());
+		});
+	});
+
+	describe("some", () => {
+		const dict = new OrderedDict([
+			["a", 1],
+			["b", 2],
+			["c", 3],
+		]);
+
+		test("key: truthy", () => {
+			const result = dict.some(([key]) => key === "b");
+			expect(result).toBe(true);
+		});
+
+		test("key: falsey", () => {
+			const result = dict.some(([key]) => key === "d");
+			expect(result).toBe(false);
+		});
+
+		test("value: truthy", () => {
+			const result = dict.some(([, value]) => value === 2);
+			expect(result).toBe(true);
+		});
+
+		test("value: truthy", () => {
+			const result = dict.some(([, value]) => value === 4);
+			expect(result).toBe(false);
+		});
+
+		test("thisArg", () => {
+			const result = dict.some(function (this: string, [key]) {
+				return key === this;
+			}, "b");
+			expect(result).toBe(true);
+		});
+
+		test("no thisArg", () => {
+			expect(() =>
+				dict.some(function (this: unknown, [, value]) {
+					return (this as any).get("b") === value;
+				}),
+			).toThrow();
+		});
+	});
+
+	describe("every", () => {
+		const dict = new OrderedDict([
+			["a", 1],
+			["b", 2],
+			["c", 3],
+		]);
+
+		test("key: truthy", () => {
+			const result = dict.every(([key]) => key.length === 1);
+			expect(result).toBe(true);
+		});
+
+		test("key: falsey", () => {
+			const result = dict.every(([key]) => key === "a");
+			expect(result).toBe(false);
+		});
+
+		test("value: truthy", () => {
+			const result = dict.every(([, value]) => value > 0);
+			expect(result).toBe(true);
+		});
+
+		test("value: falsey", () => {
+			const result = dict.every(([, value]) => value > 1);
+			expect(result).toBe(false);
+		});
+
+		test("thisArg", () => {
+			const result = dict.every(function (this: string, [key]) {
+				return typeof key === typeof this;
+			}, "b");
+			expect(result).toBe(true);
+		});
+
+		test("no thisArg", () => {
+			expect(() =>
+				dict.every(function (this: unknown, [, value]) {
+					return typeof (this as any).get("b") === typeof value;
+				}),
+			).toThrow();
 		});
 	});
 });
