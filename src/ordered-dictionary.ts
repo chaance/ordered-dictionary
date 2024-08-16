@@ -96,10 +96,16 @@ export class OrderedDict<K, V> extends Map<K, V> {
 		return this.entryAt(index);
 	}
 
-	// TODO
-	// setBefore(key: K, newKey: K, value: V) {
-	// 	throw new Error("Not implemented");
-	// }
+	/**
+	 * Sets a new key-value pair at the position before the given key.
+	 */
+	setBefore(key: K, newKey: K, value: V) {
+		const index = this.#keys.indexOf(key);
+		if (index === -1) {
+			return this;
+		}
+		return this.insert(index, newKey, value);
+	}
 
 	after(key: K) {
 		let index = this.#keys.indexOf(key);
@@ -110,10 +116,16 @@ export class OrderedDict<K, V> extends Map<K, V> {
 		return this.entryAt(index);
 	}
 
-	// TODO
-	// setAfter(key: K, newKey: K, value: V) {
-	// 	throw new Error("Not implemented");
-	// }
+	/**
+	 * Sets a new key-value pair at the position after the given key.
+	 */
+	setAfter(key: K, newKey: K, value: V) {
+		const index = this.#keys.indexOf(key);
+		if (index === -1) {
+			return this;
+		}
+		return this.insert(index + 1, newKey, value);
+	}
 
 	first() {
 		return this.entryAt(0);
